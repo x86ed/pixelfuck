@@ -1,0 +1,11 @@
+body {
+	
+}
+
+div.pf-imageOverlay{
+	width:200px;
+	height:200px;
+	background-color:#bedead;
+	position:absolute;
+	z-index:9000;	
+}
