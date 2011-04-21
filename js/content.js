@@ -1,12 +1,9 @@
 $(function() {
-		chrome.extension.onRequest.addListener(
-  			function(request, sender, sendResponse) {
-   				 console.log(sender.tab ?"from a content script:" + sender.tab.url :"from the extension");
-    		if (request.greeting == "hello"){
-      			sendResponse({farewell: "goodbye"});
-    		}else{
-      			sendResponse({}); // snub them.
-  			});
-		$('body').prepend('<div class="pf-imageOverlay" class="ui-widget-content"><p>Drag me around</p></div>')
+		$('body').prepend('<div class="pf-imageOverlay" class="ui-widget-content"><input type="text" id="messager"/></div>')
 		$( "div.pf-imageOverlay" ).draggable();
+		$('input#messager').keyup(function(){ 
+			var sendVal = $(this).val();
+			port = chrome.extension.connect({name: "sayit"});
+			port.postMessage({value: sendVal});
+		});
 });
