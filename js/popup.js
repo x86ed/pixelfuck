@@ -1,10 +1,16 @@
 $(function() {
-		//refreshing the image object from the content page
-		//bg = chrome.extension.getBackgroundPage()
-		//$("#pf-newFile").attr('value',String(bg.imageObjects.values[0]["url"]));
+		bgOb = chrome.extension.getBackgroundPage().imageObjects.values;
+		if(bgOb.length){
+			for(var i = 0;i < bgOb.length;i++){
+				$("div.pf-picListMask ul").prepend(
+				'<li><div class="pf-visible"></div><div class="pf-path">' +bgOb[i].url+ '</div><img class="pf-thumb" src="' + bgOb[i].url + '" alt=""/><div class="pf-delete"></div></li>'
+				);
+			}
+		}
 		
-		$("pf-loadButton").click(function(e){
+		$("#pf-loadButton").click(function(e){
 			e.preventDefault();
+			
 			port = chrome.extension.connect({name: "imageObjects"});
 			port.postMessage({
 				value: {
@@ -24,6 +30,15 @@ $(function() {
 				remove: "none",
 				replace: "none" 
 			});
+			//code below needs to be triggered after a message is sent back. possibly instead of being used twice just attached to a listener.
+			bgOb = chrome.extension.getBackgroundPage().imageObjects.values;
+			if(bgOb.length){
+				for(var i = 0;i < bgOb.length;i++){
+					$("div.pf-picListMask ul").prepend(
+						'<li><div class="pf-visible"></div><div class="pf-path">' +bgOb[i].url+ '</div><img class="pf-thumb" src="' + bgOb[i].url + '" alt=""/><div class="pf-delete"></div></li>'
+					);
+				}
+			}
 		});
 
 });

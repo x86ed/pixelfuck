@@ -11,7 +11,8 @@ $(function() {
 	chrome.extension.onConnect.addListener(function(port) {
   		port.onMessage.addListener(function(msg) {
 			chrome.tabs.getSelected(null, function (Tab,tab) {
-          alert(Tab.url);
+          console.log(Tab.url);
+		  //send message to that tab here
      	});
 			if(typeof(msg.remove)=="number")
 				imageObjects.values.remove(parseInt(msg.remove));

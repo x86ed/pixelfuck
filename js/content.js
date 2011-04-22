@@ -1,6 +1,6 @@
 $(function() {
-		$('body').prepend('<div class="pf-imageOverlay" class="ui-widget-content"><input type="text" id="messager"/></div>')
-		$( "div.pf-imageOverlay" ).draggable();
+		//$('body').prepend('<div class="pf-imageOverlay" class="ui-widget-content"><input type="text" id="messager"/></div>')
+		//$( "div.pf-imageOverlay" ).draggable();
 		
 		
 		$('input#messager').keyup(function(){ 
