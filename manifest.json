@@ -29,7 +29,7 @@
     "128" : "icons/icon-128.png"
   },
   "permissions": [
-
+	"tabs",
     "http://fonts.googleapis.com/"
 
   ]
