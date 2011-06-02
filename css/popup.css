@@ -75,7 +75,7 @@ div.pf-settings{
 	height: 27px;
 	position: relative;
 	padding: 0;
-	bottom: 9px;
+	top:0;
 	background-color: red;
 	border-radius: 3px;
 	padding: 21px 0 0;
