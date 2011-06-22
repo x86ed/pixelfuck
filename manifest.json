@@ -3,12 +3,6 @@
   "version" : "1.0.0",
   "description" : "in-browser image overlay tool for Chrome",
   "background_page" : "background.html",
-  "permissions" : [
-    "contextMenus",
-    "tabs",
-    "http://*/*",
-    "https://*/*"
-   ],
    "browser_action": {
    "default_icon": "icons/icon-19.png",
     "default_title": "PixelF***!",
@@ -30,7 +24,11 @@
   },
   "permissions": [
 	"tabs",
-    "http://fonts.googleapis.com/"
-
+  "http://fonts.googleapis.com/",
+  "contextMenus",
+  "tabs",
+  "unlimitedStorage",
+  "http://*/*",
+  "https://*/*"
   ]
 }
