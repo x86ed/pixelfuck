@@ -1,8 +1,9 @@
 $(function() {
 		//$('body').prepend('<div class="pf-imageOverlay" class="ui-widget-content"><input type="text" id="messager"/></div>')
 		//$( "div.pf-imageOverlay" ).draggable();
-		
-		
+		//localStorage["url"] = window.location;
+		//$('body').click(function(){alert(localStorage["url"])});	
+	/*	
 		$('input#messager').keyup(function(){ 
 			var sendVal = $(this).val();
 			port = chrome.extension.connect({name: "imageObjects"});
@@ -65,4 +66,4 @@ $(function() {
 				}
 			});
 		}
-});
+});*/

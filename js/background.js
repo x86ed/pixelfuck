@@ -13,7 +13,6 @@ Object.prototype.values = function(){
     return values
 }
 
-
     var pixelFuck = {};
     pixelFuck.webdb = {};
     pixelFuck.webdb.db = null;
@@ -26,51 +25,67 @@ Object.prototype.values = function(){
           console.error("incorrect datatypes for DB creation");
     }
   
-    pixelFuck.webdb.createTable = function(tableName,columnArray) {//takes arguments as name,{column Array sets coumns of key ,type}
+    pixelFuck.webdb.createTable = function(tableName,columnArray,hasPrimarykey=False,hasDate=True) {//takes arguments as name,{column Array sets coumns of key ,type}
       var db = pixelFuck.webdb.db;
-      var columnString = 
+      var columnString = function(){
+	  var columnStringContent = "";
+          for(var i in columnArray){i
+              columnStringContent += ", " + columnArray.keys[i] + " " + columnArray.values[i]; 
+          }
+	  columnStringContent = hasPrimarykey?columnStringContent.substr(2):"ID INTEGER PRIMARY KEY ASC" + columnStringContent;
+	  columnStringContent = hasDate?columnStringContent + ", added_on DATETIME":columnStringContent;
+          return columnStringContent;
+      }
       if(typeof(tableName)== "string" && typeof(columnArray) == "object" && columnArray.length > 0 ){
           db.transaction(function(tx) {
-            tx.executeSql("CREATE TABLE IF NOT EXISTS" + tableName +"(ID INTEGER PRIMARY KEY ASC, todo TEXT, added_on DATETIME)", []);
+              tx.executeSql("CREATE TABLE IF NOT EXISTS" + tableName +"(" + columnString + ")", []);
           });
+      }else{
+          console.error("table datatypes incorrect");
       }
     }
   
-    html5rocks.webdb.addTodo = function(todoText) {
-      var db = html5rocks.webdb.db;
-      db.transaction(function(tx){
-        var addedOn = new Date();
-        tx.executeSql("INSERT INTO todo(todo, added_on) VALUES (?,?)", 
-            [todoText, addedOn],
-            html5rocks.webdb.onSuccess,
-            html5rocks.webdb.onError);
-       });
+    pixelFuck.webdb.addRow = function(table,rowData) {//rowData should be an object
+      var db = pixelFuck.webdb.db;
+      if(typeof(table) == "string" && typeof(rowData) == "object" && rowData.length > 0){
+          db.transaction(function(tx){
+              rowInfo = rowData.values();
+	      if(rowData.keys().indexOf("added_on") != -1)
+                  rowInfo[rowData.keys().indexOf("added_on")] = new Date();
+              tx.executeSql("INSERT INTO " + table  +  "(" + JSON.stringify(rowData.keys()).replace(/\[|\]|"/,"") + ") VALUES (?,?)", 
+                  rowInfo,
+                  pixelFuck.webdb.onSuccess,
+                  pixelFuck.webdb.onError);
+          });
+     }else{
+         console.error("rowData needs to be an object");
+     }
     }
   
-    html5rocks.webdb.onError = function(tx, e) {
-      console.log("SQLite ERROR: " + e.message);
+    pixelFuck.webdb.onError = function(tx, e) {
+      console.error("SQLite ERROR: " + e.message);
     }
   
-    html5rocks.webdb.onSuccess = function(tx, r) {
+    pixelFuck.webdb.onSuccess = function(tx, r) {
       // re-render the data.
-      html5rocks.webdb.getAllTodoItems(loadTodoItems);
+      pixelFuck.webdb.getAllTodoItems(loadTodoItems);
     }
   
   
-    html5rocks.webdb.getAllTodoItems = function(renderFunc) {
-      var db = html5rocks.webdb.db;
+    pixelFuck.webdb.getAllTableItems = function(renderFunc) {
+      var db = pixelFuck.webdb.db;
       db.transaction(function(tx) {
-        tx.executeSql("SELECT * FROM todo", [], renderFunc, 
-            html5rocks.webdb.onError);
+        tx.executeSql("SELECT * FROM " +tableName +  , [], renderFunc, 
+            pixelFuck.webdb.onError);
       });
     }
   
-    html5rocks.webdb.deleteTodo = function(id) {
-      var db = html5rocks.webdb.db;
+    pixelFuck.webdb.deleteTableRow = function(tableName,id) {
+      var db = pixelFuck.webdb.db;
       db.transaction(function(tx){
-        tx.executeSql("DELETE FROM todo WHERE ID=?", [id],      
-            html5rocks.webdb.onSuccess, 
-            html5rocks.webdb.onError);
+        tx.executeSql("DELETE FROM " + tableName  + " WHERE ID=?", [id],      
+            pixelFuck.webdb.onSuccess, 
+            pixelFuck.webdb.onError);
         });
     }
   
@@ -91,7 +106,7 @@ Object.prototype.values = function(){
     function init() {
       html5rocks.webdb.open();
       html5rocks.webdb.createTable();
-      html5rocks.webdb.getAllTodoItems(loadTodoItems);
+      pixelFuck.webdb.getAllTableItems(loadTodoItems);
     }
 
     function addTodo() {
